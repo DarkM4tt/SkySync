@@ -1,13 +1,18 @@
-import type { Metadata } from "next";
+"use client";
+
+// import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Skysync - Weather Forecasting",
-  description: "Generated using Next.js, Typescript and Tailwind",
-};
+const queryClient = new QueryClient();
+
+// export const metadata: Metadata = {
+//   title: "Skysync - Weather Forecasting",
+//   description: "Generated using Next.js, Typescript and Tailwind",
+// };
 
 export default function RootLayout({
   children,
@@ -16,7 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <QueryClientProvider client={queryClient}>
+        <body className={inter.className}>{children}</body>
+      </QueryClientProvider>
     </html>
   );
 }
