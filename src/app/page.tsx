@@ -2,7 +2,9 @@
 
 import Container from "@/components/Container";
 import Navbar from "@/components/Navbar";
+import WeatherIcon from "@/components/WeatherIcon";
 import { convertKelvinToCelsius } from "@/utils/convertKelvinToCelsius";
+import { getIcon } from "@/utils/getIcon";
 import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { useQuery } from "react-query";
@@ -130,7 +132,16 @@ export default function Home() {
                       key={idx}
                       className="flex flex-col justify-between gap-2 items-center text-xs font-semibold"
                     >
-                      <p>{format(parseISO(data.dt_txt), "h:mm a")}</p>
+                      <p className="whitespace-nowrap">
+                        {format(parseISO(data.dt_txt), "h:mm a")}
+                      </p>
+                      {/* <WeatherIcon iconname={data?.weather[0].icon} /> */}
+                      <WeatherIcon
+                        iconname={getIcon(data?.weather[0].icon, data?.dt_txt)}
+                      />
+                      <p className="">
+                        {convertKelvinToCelsius(data?.main.temp ?? 0)}°
+                      </p>
                     </div>
                   );
                 })}
