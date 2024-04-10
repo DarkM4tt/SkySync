@@ -1,6 +1,7 @@
 "use client";
 
 import Container from "@/components/Container";
+import ForecastWeatherDetails from "@/components/ForecastWeatherDetails";
 import Navbar from "@/components/Navbar";
 import WeatherDetails from "@/components/WeatherDetails";
 import WeatherIcon from "@/components/WeatherIcon";
@@ -82,7 +83,21 @@ export default function Home() {
 
   const firstData = data?.list[0];
 
-  console.log("data", data?.city.name);
+  const uniqueDates = [
+    ...new Set(
+      data?.list.map(
+        (entry) => new Date(entry.dt * 1000).toISOString().split("T")[0]
+      )
+    ),
+  ];
+
+  const firstDataForEachDate = uniqueDates.map((date) => {
+    return data?.list.find((entry) => {
+      const entryDate = new Date(entry.dt * 1000).toISOString().split("T")[0];
+      const entryTime = new Date(entry.dt * 1000).getHours();
+      return entryDate === date && entryTime >= 6;
+    });
+  });
 
   if (isLoading)
     return (
@@ -158,7 +173,7 @@ export default function Home() {
                 {firstData?.weather[0].description}
               </p>
               <WeatherIcon
-                iconname={getIcon(
+                iconName={getIcon(
                   firstData?.weather[0].icon ?? "",
                   firstData?.dt_txt ?? ""
                 )}
@@ -187,6 +202,31 @@ export default function Home() {
         {/* 5 day forecast data */}
         <section className="flex w-full flex-col gap-4">
           <p className="text-2xl">Forecast (5 days)</p>
+          {firstDataForEachDate.map((d, idx) => (
+            <ForecastWeatherDetails
+              key={idx}
+              description={d?.weather[0].description ?? ""}
+              weatherIcon={d?.weather[0].icon ?? "01d"}
+              date={format(parseISO(d?.dt_txt ?? ""), "dd.MM")}
+              day={format(parseISO(d?.dt_txt ?? ""), "EEE")}
+              feels_like={d?.main.feels_like ?? 0}
+              temp={d?.main.temp ?? 0}
+              temp_max={d?.main.temp_max ?? 0}
+              temp_min={d?.main.temp_min ?? 0}
+              airPressure={`${d?.main.pressure} hPa`}
+              humidity={`${d?.main.humidity}% `}
+              sunrise={format(
+                fromUnixTime(data?.city.sunrise ?? 1702517657),
+                "H:mm"
+              )}
+              sunset={format(
+                fromUnixTime(data?.city.sunset ?? 1702517657),
+                "H:mm"
+              )}
+              visibility={`${metersToKelometers(d?.visibility ?? 10000)} `}
+              windSpeed={`${covertWindSpeed(d?.wind.speed ?? 1.64)} `}
+            />
+          ))}
         </section>
       </main>
     </div>

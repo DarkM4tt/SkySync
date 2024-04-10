@@ -5,7 +5,7 @@ import React from "react";
 type Props = {};
 
 export default function WeatherIcon(
-  props: React.HTMLProps<HTMLDivElement> & { iconname: string }
+  props: React.HTMLProps<HTMLDivElement> & { iconName: string }
 ) {
   return (
     <div {...props} className={cn("relative h-20 w-20")}>
@@ -14,7 +14,7 @@ export default function WeatherIcon(
         height={100}
         alt="weather-icon"
         className="absolute h-full w-full"
-        src={`https://openweathermap.org/img/wn/${props.iconname}@4x.png`}
+        src={`https://openweathermap.org/img/wn/${props.iconName}@4x.png`}
       />
     </div>
   );
