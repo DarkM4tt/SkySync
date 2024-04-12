@@ -119,7 +119,10 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-4 bg-gray-100 min-h-screen">
-      <Navbar location={data?.city.name} />
+      <Navbar cityName={data?.city.name} country={data?.city.country} />
+      <h1 className="text-5xl mx-auto">
+        {loadingCity ? "" : `${data?.city.name}`}
+      </h1>
       <main className="px-3 max-w-7xl mx-auto flex flex-col gap-9 w-full pb-10 pt-4">
         {loadingCity ? (
           <WeatherSkeleton />
@@ -229,8 +232,8 @@ export default function Home() {
                   key={idx}
                   description={d?.weather[0].description ?? ""}
                   weatherIcon={d?.weather[0].icon ?? "01d"}
-                  date={format(parseISO(d?.dt_txt ?? ""), "dd.MM")}
-                  day={format(parseISO(d?.dt_txt ?? ""), "EEE")}
+                  date={d ? format(parseISO(d?.dt_txt ?? ""), "dd.MM") : ""}
+                  day={d ? format(parseISO(d?.dt_txt ?? ""), "EEE") : ""}
                   feels_like={d?.main.feels_like ?? 0}
                   temp={d?.main.temp ?? 0}
                   temp_max={d?.main.temp_max ?? 0}
